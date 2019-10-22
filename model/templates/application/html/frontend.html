@@ -10,16 +10,21 @@
   <link rel="stylesheet" href="../css/styling.css">
 </head>
 
-<body>
-  <h1 id="heading1">Application</h1>
-  <p>The purpose of this application/is to allow you to draw a digit on the provided canvas and submit it to a model
-    which will compare it to other hand-drawn digits in the database and try to recognise the digit.</p>
-  <p>Once you have drawn the digit, click 'Submit for Recognition'. The image will then be compared against other hand-drawn
-    images in the database and, using the model, it will attempt to recognise the inputted image and output the result.</p>
+<script type="text/javascript" src="../javascript/canvas.js"></script>
 
-    <canvas id="canvas" width="640" height="480"></canvas>
-    <script type="text/javascript" src="../javascript/canvas.js"></script>
-    <button id="submit" type="button">Submit</button>
+
+<body onload="init()">
+  <canvas id="can" width="640" height="480"></canvas>
+  <!-- <div id="eraser_text">Eraser</div> -->
+  <!-- <div id="eraser_white" onclick="color(this)"></div> -->
+  <!-- <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;"> -->
+
+  <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:55%;left:10%;">
+  <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;">
 </body>
 
 </html>
+
+<!-- <canvas id="canvas" width="640" height="480"></canvas> -->
+<!-- <script type="text/javascript" src="../javascript/canvas.js"></script> -->
+<!-- <button id="submit" type="button">Submit</button> -->

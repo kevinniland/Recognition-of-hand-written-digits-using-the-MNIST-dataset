@@ -1,86 +1,84 @@
-# Adapted from: https://docs.python.org/3/library/gzip.html
-
 import gzip
-import numpy as np
+import numpy as numpy
 
-# Import keras.
+# Import keras
 import keras as kr
+from keras.models import load_model
+from keras.models import Sequential
+from keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPooling2D
 
-#%matplotlib inline
-import matplotlib.pyplot as plt
+import tensorflow as tf
 
-# For encoding categorical variables.
-import sklearn.preprocessing as pre
+# %matplotlib inline # Only usable in iPython
+import matplotlib.pyplot as plot
 
-with gzip.open('data/t10k-images-idx3-ubyte.gz', 'rb') as f:
-    file_content = f.read()
+# For encoding categorical variables
+import sklearn.preprocessing as skpre
 
-with gzip.open('data/t10k-labels-idx1-ubyte.gz', 'rb') as f:
-    labels = f.read()
+# The MNIST database contains 60,000 training images and 10,000 test images.
+# x_train and x_test contain the greyscale RGB codes (0 - 255) for the training images and test images, respectively.
+# y_train and y_test contain the labels (0 - 9) for the training images and test images, respectively.
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
-print(type(file_content))
-file_content[0:4]
+image_index = 7777 # You may select anything up to 60,000
+print(y_train[image_index]) # Displays the appropriate label for the image at the specified index
+plot.imshow(x_train[image_index], cmap='Greys')
+# plot.show()
 
-# Adapted from: https://stackoverflow.com/questions/51220161/how-to-convert-from-bytes-to-int
+# For the convolutional neural network, we need to know the shape of the dataset to channel it into the network. 
+# print(x_train.shape)
 
-int.from_bytes(file_content[0:4], byteorder='big')
-int.from_bytes(file_content[8:12], byteorder='big')
-int.from_bytes(file_content[12:16], byteorder='big')
-int.from_bytes(file_content[278:279], byteorder='big')
+# To be able to use the dataset with Keras, the numpy arrays need to be 4-dimensional. However, from above (print(x_train.shape)), 
+# you can see that the array is 3-dimensional. The data must be normalised (requirement of neural network models). This can be done by dividing
+# the RGB codes (both the training and test images) by 255
 
-int.from_bytes(labels[8:9], byteorder="big")
+# Here, we 'reshape' the the 3D arrays to 4D arrays to work with the Keras API
+x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
+x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
+input_shape = (28, 28, 1)
 
-l = file_content[16:800]
-print(type(l))
+# float32 is used to ensure we get decimal points after division
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
 
-image = ~np.array(list(file_content[16:800])).reshape(28,28).astype(np.uint8)
+# Normalisation of data
+x_train /= 255
+x_test /= 255
 
-plt.imshow(image, cmap='gray')
-plt.show()
+# print('x_train shape:', x_train.shape)
+# print('Number of images in x_train', x_train.shape[0])
+# print('Number of images in x_test', x_test.shape[0])
 
-with gzip.open('data/t10k-images-idx3-ubyte.gz', 'rb') as f:
-    test_img = f.read()
+model = Sequential()
 
-with gzip.open('data/t10k-labels-idx1-ubyte.gz', 'rb') as f:
-    test_lbl = f.read()
-    
-test_img = ~np.array(list(test_img[16:])).reshape(10000, 784).astype(np.uint8) / 255.0
-test_lbl =  np.array(list(test_lbl[ 8:])).astype(np.uint8)
+model.add(Conv2D(28, kernel_size=(3,3), input_shape=input_shape))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation=tf.nn.relu))
+model.add(Dropout(0.2))
 
-with gzip.open('data/train-images-idx3-ubyte.gz', 'rb') as f:
-    train_img = f.read()
+# Final Dense layer must have 10 neurons since there are 10 different numbers (0 - 9)
+model.add(Dense(10,activation=tf.nn.softmax)) 
 
-with gzip.open('data/train-labels-idx1-ubyte.gz', 'rb') as f:
-    train_lbl = f.read()
-    
-train_img = ~np.array(list(train_img[16:])).reshape(60000, 28, 28).astype(np.uint8) / 255.0
-train_lbl =  np.array(list(train_lbl[ 8:])).astype(np.uint8)
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-inputs = train_img.reshape(60000, 784)
+# try:
+#     print("Attempting to load model....")
+#     model = load_model("model.h5")
+# except:
+#     print("Unable to load model. Creating new model...")
+#     model.fit(x=x_train,y=y_train, epochs=20)
+#     model.evaluate(x_test, y_test)
+#     model.save("model.h5")
 
-encoder = pre.LabelBinarizer()
-encoder.fit(train_lbl)
-outputs = encoder.transform(train_lbl)
+try:
+    print("Attempting to load model....")
+    model = load_model("mnist_model.h5")
+except:
+    print("Unable to load model. Creating new model...")
+    model.fit(x_train, y_train, epochs=10)
+    model.save("mnist_model.h5")
 
-# Start a neural network, building it by layers.
-model = kr.models.Sequential()
+output = model.predict(x_test)
 
-(encoder.inverse_transform(model.predict(test_img)) == test_lbl).sum()
-
-plt.imshow(test_img[5].reshape(28, 28), cmap='gray')
-
-# Add a hidden layer with 1000 neurons and an input layer with 784.
-model.add(kr.layers.Dense(units=600, activation='linear', input_dim=784))
-model.add(kr.layers.Dense(units=400, activation='relu'))
-# Add a three neuron output layer.
-model.add(kr.layers.Dense(units=10, activation='softmax'))
-
-# Build the graph.
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-print(train_lbl[0], outputs[0])
-
-for i in range(10):
-    print(i, encoder.transform([i]))
-
-model.fit(inputs, outputs, epochs=2, batch_size=100)
+print(model.predict(x_test[100:101]))
