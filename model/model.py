@@ -1,84 +1,93 @@
-import gzip
-import numpy as numpy
+# Imports
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Import keras
-import keras as kr
+# Keras is a high-level neural networks API, written in Python and capable of running on 
+# top of TensorFlow, CNTK, or Theano
+import keras
+from keras.datasets import mnist # Import the MNIST dataset directly from the Keras API
+from keras.models import Sequential # The Sequential model is a linear stack of layers
+from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 from keras.models import load_model
-from keras.models import Sequential
-from keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPooling2D
 
-import tensorflow as tf
+(train_imgs, train_labels), (test_imgs, test_labels) = mnist.load_data()
 
-# %matplotlib inline # Only usable in iPython
-import matplotlib.pyplot as plot
+# Defines the size of the image as 28 * 28 pixels
+img_rows, img_cols = 28, 28
 
-# For encoding categorical variables
-import sklearn.preprocessing as skpre
+# Reshaping
+#
+# To be able to use the MNIST dataset with the Keras API, we need to change our array (which is 3-dimensional)
+# to 4-dimensional numpy arrays. We also must 'normalize' our data, as is always required in neural networks.
+# This can be done by dividing the RGB codes of the images to 255
+# if k.image_data_format() == 'channels_first':
+#     train_imgs = train_imgs.reshape(train_imgs.shape[0], 1, img_rows, img_cols)
+#     test_imgs = test_imgs.reshape(test_imgs.shape[0], 1, img_rows, img_cols)
+#     input_shape = (1, img_rows, img_cols)
+# else:
+train_imgs = train_imgs.reshape(train_imgs.shape[0], img_rows, img_cols, 1)
+test_imgs = test_imgs.reshape(test_imgs.shape[0], img_rows, img_cols, 1)
+input_shape = (img_rows, img_cols, 1)
 
-# The MNIST database contains 60,000 training images and 10,000 test images.
-# x_train and x_test contain the greyscale RGB codes (0 - 255) for the training images and test images, respectively.
-# y_train and y_test contain the labels (0 - 9) for the training images and test images, respectively.
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+# Ensure the values of train_imgs and test_imgs are float. This is done so as we can get decimal points after division
+train_imgs = train_imgs.astype('float32')
+test_imgs = test_imgs.astype('float32')
 
-image_index = 7777 # You may select anything up to 60,000
-print(y_train[image_index]) # Displays the appropriate label for the image at the specified index
-plot.imshow(x_train[image_index], cmap='Greys')
-# plot.show()
+train_imgs /= 255
+test_imgs /= 255
 
-# For the convolutional neural network, we need to know the shape of the dataset to channel it into the network. 
-# print(x_train.shape)
+print(train_imgs.shape[0], "training samples")
+print(test_imgs.shape[0], "testing samples")
 
-# To be able to use the dataset with Keras, the numpy arrays need to be 4-dimensional. However, from above (print(x_train.shape)), 
-# you can see that the array is 3-dimensional. The data must be normalised (requirement of neural network models). This can be done by dividing
-# the RGB codes (both the training and test images) by 255
+# In the model, we can experiment with any number for the first Dense layer. However, the final Dense layer must have
+# 10 neurons since there are 10 number classes (0, 1, 2, 3, ..., 9)
+num_classes = 10
 
-# Here, we 'reshape' the the 3D arrays to 4D arrays to work with the Keras API
-x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
-input_shape = (28, 28, 1)
+train_labels = keras.utils.to_categorical(train_labels, num_classes)
+test_labels = keras.utils.to_categorical(test_labels, num_classes)
+train_labels[0]
 
-# float32 is used to ensure we get decimal points after division
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
-
-# Normalisation of data
-x_train /= 255
-x_test /= 255
-
-# print('x_train shape:', x_train.shape)
-# print('Number of images in x_train', x_train.shape[0])
-# print('Number of images in x_test', x_test.shape[0])
-
+# Create a Sequential model and add the layers
 model = Sequential()
 
-model.add(Conv2D(28, kernel_size=(3,3), input_shape=input_shape))
+model.add(Conv2D(32, kernel_size=(3, 3),
+                 activation='relu', input_shape=input_shape))
+model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Flatten())
-model.add(Dense(128, activation=tf.nn.relu))
-model.add(Dropout(0.2))
+model.add(Dropout(0.25))
+model.add(Flatten())  # Flattens the 2D arrays for fully connected layers
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(num_classes, activation='softmax'))
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
 
-# Final Dense layer must have 10 neurons since there are 10 different numbers (0 - 9)
-model.add(Dense(10,activation=tf.nn.softmax)) 
+# Determines the number of samples that will be propagated through the neural network
+batch_size = 128 
 
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+# In the context of a neural network, one epoch is the equivalent of one forward pass and one backward pass of
+# all the training examples
+num_epoch = 100
 
-# try:
-#     print("Attempting to load model....")
-#     model = load_model("model.h5")
-# except:
-#     print("Unable to load model. Creating new model...")
-#     model.fit(x=x_train,y=y_train, epochs=20)
-#     model.evaluate(x_test, y_test)
-#     model.save("model.h5")
-
+# To avoid having to train the model each time the program is ran, the trained model can be loaded from a file
+# If no file is created, then the model is trained and then saved to a file
 try:
     print("Attempting to load model....")
-    model = load_model("mnist_model.h5")
+    model = load_model("model_digit.h5")
 except:
-    print("Unable to load model. Creating new model...")
-    model.fit(x_train, y_train, epochs=10)
-    model.save("mnist_model.h5")
+    print("Failed to load model. Creating new model...")
+    model_log = model.fit(train_imgs, train_labels,
+                          batch_size=batch_size,
+                          epochs=num_epoch,
+                          verbose=1,
+                          validation_data=(test_imgs, test_labels))
 
-output = model.predict(x_test)
+    model.save_weights("model_digit.h5")
 
-print(model.predict(x_test[100:101]))
+    model.save("model_digit.h5")
+    print("Saved model. Model will now be loaded on next run through")
+
+plt.imshow(test_imgs[999].reshape(28, 28), cmap="gray")
+plt.show()
+
+print(model.predict(test_imgs[999:1000]))
