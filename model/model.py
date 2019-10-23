@@ -2,8 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Keras is a high-level neural networks API, written in Python and capable of running on 
-# top of TensorFlow, CNTK, or Theano
+# Keras is a high-level neural networks API, written in Python and capable of running on top of TensorFlow, CNTK, or Theano
 import keras
 from keras.datasets import mnist # Import the MNIST dataset directly from the Keras API
 from keras.models import Sequential # The Sequential model is a linear stack of layers
