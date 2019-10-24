@@ -72,6 +72,7 @@ num_epoch = 100
 # If no file is created, then the model is trained and then saved to a file
 try:
     print("Attempting to load model....")
+    print("Model loaded successfully")
     model = load_model("model_digit.h5")
 except:
     print("Failed to load model. Creating new model...")
