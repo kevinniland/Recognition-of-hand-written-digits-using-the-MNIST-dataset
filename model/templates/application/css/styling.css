@@ -1,38 +1,60 @@
-#can {
-  border: 5px solid black;
-  position: absolute;
-  top: 75;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-
-#heading1 {
-  text-align: center;
-}
-
-p {
-  text-align: center;
-}
-
-#submit {
-  position: relative;
-}
-
-#eraser_text {
+#canvas {
   position: absolute;
   top: 10%;
   left: 10%;
+  border: 10px solid black;
+}
+
+#brush {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+}
+
+#brushColor {
+  position: absolute;
+  top: 15%;
+  left: 50.8%;
+  width: 1.3%;
+  height: 2.5%;
+  background: black;
+}
+
+#brushColor: active {
+  cursor: crosshair;
+}
+
+#eraser {
+  position: absolute;
+  top: 12%;
+  left: 53%;
+}
+
+#eraserBrush {
+  position: absolute;
+  top: 15%;
+  left: 53.8%;
+  width: 1%;
+  height: 2%;
+  background: white;
   border: 2px solid;
 }
 
-#eraser_white {
+#canvasimg {
   position: absolute;
-  top: 22%;
-  left: 45%;
-  width: 15px;
-  height: 15px;
-  background: white;
-  border: 2px solid;
+  top: 10%;
+  left: 52%;
+  display: none;
+}
+
+#saveButton {
+  position: absolute;
+  top: 70%;
+  left: 25%;
+}
+
+#clearButton {
+  position: absolute;
+  top: 70%;
+  left: 30%;
 }

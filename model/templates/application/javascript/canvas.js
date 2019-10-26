@@ -1,3 +1,6 @@
+// Adapted from https://stackoverflow.com/a/8398189/8721358
+
+//
 var canvas, ctx, flag = false,
   prevX = 0,
   currX = 0,
@@ -8,8 +11,9 @@ var canvas, ctx, flag = false,
 var x = "black",
   y = 2;
 
+// Initialise the canvas and set it up
 function init() {
-  canvas = document.getElementById('can');
+  canvas = document.getElementById('canvas');
   ctx = canvas.getContext("2d");
   w = canvas.width;
   h = canvas.height;
@@ -30,54 +34,51 @@ function init() {
 
 function color(obj) {
   switch (obj.id) {
-    case "green":
-      x = "green";
-      break;
-    case "blue":
-      x = "blue";
-      break;
-    case "red":
-      x = "red";
-      break;
-    case "yellow":
-      x = "yellow";
-      break;
-    case "orange":
-      x = "orange";
-      break;
     case "black":
       x = "black";
       break;
-    case "white":
-      x = "white";
-      break;
   }
+
   if (x == "white") y = 14;
   else y = 2;
 
 }
 
+// Allows the user to draw with their mouse
 function draw() {
   ctx.beginPath();
+
   ctx.moveTo(prevX, prevY);
   ctx.lineTo(currX, currY);
+
   ctx.strokeStyle = x;
   ctx.lineWidth = y;
+
   ctx.stroke();
-  ctx.closePath();
+  ctx.closePath();``
 }
 
+// Clears the canvas. Removes the saved image from view as well if there is one
 function erase() {
   ctx.clearRect(0, 0, w, h);
-  document.getElementById("canvasimg").style.display = "none";
 }
 
-function save() {
-  document.getElementById("canvasimg").style.border = "2px solid";
-  var dataURL = canvas.toDataURL();
-  document.getElementById("canvasimg").src = dataURL;
-  document.getElementById("canvasimg").style.display = "inline";
-}
+// Submits the image to the model
+// function submitImage() {
+//   var imageURL = canvas.toDataURL();
+
+//   $.ajax ({
+//     type: 'post',
+//     url: '/',
+//     data: {
+//       imageBase64: imageURL
+//     },
+
+//     success: function (data) {
+//       $('#modelPrediction').text(data.modelPrediction)
+//     }
+//   });
+// }
 
 function findxy(res, e) {
   if (res == 'down') {
@@ -88,23 +89,30 @@ function findxy(res, e) {
 
     flag = true;
     dot_flag = true;
+
     if (dot_flag) {
       ctx.beginPath();
+
       ctx.fillStyle = x;
       ctx.fillRect(currX, currY, 2, 2);
+
       ctx.closePath();
       dot_flag = false;
     }
   }
+
   if (res == 'up' || res == "out") {
     flag = false;
   }
+
   if (res == 'move') {
     if (flag) {
       prevX = currX;
       prevY = currY;
+
       currX = e.clientX - canvas.offsetLeft;
       currY = e.clientY - canvas.offsetTop;
+
       draw();
     }
   }

@@ -8,23 +8,23 @@
   <meta name="keywords" content="HTML, CSS, JavaScript">
   <meta name="author" content="Kevin Niland">
   <link rel="stylesheet" href="../css/styling.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
-<script type="text/javascript" src="../javascript/canvas.js"></script>
-
-
 <body onload="init()">
-  <canvas id="can" width="640" height="480"></canvas>
-  <!-- <div id="eraser_text">Eraser</div> -->
-  <!-- <div id="eraser_white" onclick="color(this)"></div> -->
-  <!-- <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;"> -->
+  <canvas id="canvas" width="600" height="400"></canvas>
 
-  <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:55%;left:10%;">
-  <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;">
+  <div id="brush">Brush</div>
+  <div id="brushColor" onclick="color(this)"></div>
+  <div id="eraser">Eraser</div>
+  <div id="eraserBrush" onclick="color(this)"></div>
+
+  <img id="canvasimg">
+
+  <input id="saveButton" type="button" value="Save" size="30" onclick="submitImage()">
+  <input id="clearButton" type="button" value="Clear" size="23" onclick="erase()">
 </body>
 
-</html>
+<script src="../javascript/canvas.js"></script>
 
-<!-- <canvas id="canvas" width="640" height="480"></canvas> -->
-<!-- <script type="text/javascript" src="../javascript/canvas.js"></script> -->
-<!-- <button id="submit" type="button">Submit</button> -->
+</html>

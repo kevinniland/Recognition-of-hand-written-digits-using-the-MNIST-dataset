@@ -14,8 +14,8 @@ from keras.datasets import mnist
 # The Sequential model is a linear stack of layers
 from keras.models import Sequential 
 
-''' Please refer to the wiki of the repository from which this project is located for a more in-depth analysis and explanation
-    of various imports, packages, the model, how it is trained, etc. '''
+#''' Please refer to the wiki of the repository from which this project is located for a more in-depth analysis and explanation
+   # of various imports, packages, the model, how it is trained, etc. '''
 # Dense - implements the operation: output = activation(dot(input, kernel) + bias) where activation is the element-wise 
 # activation function passed as the activation argument, kernel is a weights matrix created by the layer, and bias is a bias 
 # vector created by the layer (only applicable if use_bias is True)
@@ -112,7 +112,11 @@ except:
     model.save("model.h5")
     print("Saved model. Model will now be loaded on next run through")
 
-plt.imshow(test_imgs[999].reshape(28, 28), cmap="gray")
+plt.imshow(test_imgs[3333].reshape(28, 28), cmap="gray")
 plt.show()
 
-print(model.predict(test_imgs[999:1000]))
+# print(model.predict(test_imgs[9999:10000]), "\nPredicted number: ", np.argmax(model.predict(test_imgs[9999:10000])))
+
+# Prints the predicted number. The predicted number is based on a score. Each number (0 - 9) in the array is given a score.
+# The number with the highest score is presumed by the model to be number in the image that has been graphed
+print("\nPredicted number: ", np.argmax(model.predict(test_imgs[3333:3334])))
