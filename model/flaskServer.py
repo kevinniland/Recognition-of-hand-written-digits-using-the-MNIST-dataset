@@ -25,16 +25,16 @@ def recogniseImage():
         userImageArray = np.asarray(userImage)
         userImageArray = userImageArray.flatten()
 
-        # with tf.Session() as sess:
-        #     saver = tf.train.import_meta_graph('model.h5')
+        with tf.Session() as sess:
+            saver = tf.train.import_meta_graph('model.h5')
 
-        #     predict_number = tf.argmax(ten.y, 1)
-        #     predicted_number = ten.sess.run([predict_number], feed_dict={ten.x: [userImageArray]})
-        #     modelPrediction = predicted_number[0][0]
-        #     modelPrediction = int(modelPrediction)
-        #     print(modelPrediction)
+            predict_number = tf.argmax(tf.y, 1)
+            predicted_number = tf.sess.run([predict_number], feed_dict={tf.x: [userImageArray]})
+            modelPrediction = predicted_number[0][0]
+            modelPrediction = int(modelPrediction)
+            print(modelPrediction)
 
-        # return jsonify(modelPrediction = modelPrediction)
+        return jsonify(modelPrediction = modelPrediction)
 
     return render_template('application/html/frontend.html')
     

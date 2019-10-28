@@ -64,21 +64,21 @@ function erase() {
 }
 
 // Submits the image to the model
-// function submitImage() {
-//   var imageURL = canvas.toDataURL();
+function submitImage() {
+  var imageURL = canvas.toDataURL();
 
-//   $.ajax ({
-//     type: 'post',
-//     url: '/',
-//     data: {
-//       imageBase64: imageURL
-//     },
+  $.ajax ({
+    type: 'post',
+    url: '/',
+    data: {
+      imageBase64: imageURL
+    },
 
-//     success: function (data) {
-//       $('#modelPrediction').text(data.modelPrediction)
-//     }
-//   });
-// }
+    success: function (data) {
+      $('#modelPrediction').text(data.modelPrediction)
+    }
+  });
+}
 
 function findxy(res, e) {
   if (res == 'down') {
