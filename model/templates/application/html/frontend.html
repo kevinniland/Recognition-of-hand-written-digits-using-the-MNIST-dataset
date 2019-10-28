@@ -24,10 +24,8 @@
   <input id="saveButton" type="button" value="Save" size="30" onclick="submitImage()">
   <input id="clearButton" type="button" value="Clear" size="23" onclick="erase()">
 
-  <div>
-    <h3>Predicted number: </h3>                    
-    <h1 id="modelPrediction"></h1>
-</div>
+  <h3 id="predictedNumber">Predicted number: </h3>                    
+  <h1 id="digit"></h1>
 </body>
 
 <script src="{{ url_for('static', filename='javascript/canvas.js') }}"></script>

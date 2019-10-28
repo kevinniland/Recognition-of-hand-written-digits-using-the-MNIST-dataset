@@ -55,7 +55,7 @@ function draw() {
   ctx.lineWidth = y;
 
   ctx.stroke();
-  ctx.closePath();``
+  ctx.closePath();
 }
 
 // Clears the canvas. Removes the saved image from view as well if there is one
@@ -66,18 +66,6 @@ function erase() {
 // Submits the image to the model
 function submitImage() {
   var imageURL = canvas.toDataURL();
-
-  $.ajax ({
-    type: 'post',
-    url: '/',
-    data: {
-      imageBase64: imageURL
-    },
-
-    success: function (data) {
-      $('#modelPrediction').text(data.modelPrediction)
-    }
-  });
 }
 
 function findxy(res, e) {

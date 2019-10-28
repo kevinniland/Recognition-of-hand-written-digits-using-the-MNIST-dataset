@@ -20,10 +20,6 @@
   background: black;
 }
 
-/* #brushColor: active {
-  cursor: crosshair;
-} */
-
 #eraser {
   position: absolute;
   top: 12%;
@@ -57,4 +53,18 @@
   position: absolute;
   top: 70%;
   left: 30%;
+}
+
+#predictedNumber {
+  position: absolute;
+  top: 30%;
+  right: 30%;
+  font-size: 200%;
+}
+
+#digit {
+  position: absolute;
+  top: 30%;
+  right: 20%;
+  font-size: 200%;
 }
