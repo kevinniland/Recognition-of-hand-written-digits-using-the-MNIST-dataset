@@ -7,12 +7,13 @@
   <meta name="description" content="">
   <meta name="keywords" content="HTML, CSS, JavaScript">
   <meta name="author" content="Kevin Niland">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styling.css') }}">
+  <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styling.css') }}"> -->
+  <link rel="stylesheet" type="text/css" href="../../../static/css/styling.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body onload="init()">
-  <canvas id="canvas" width="600" height="400"></canvas>
+  <canvas id="canvas" width="392" height="392"></canvas>
 
   <div id="brush">Brush</div>
   <div id="brushColor" onclick="color(this)"></div>
@@ -21,13 +22,16 @@
 
   <img id="canvasimg">
 
+  <form method="POST">
   <input id="saveButton" type="button" value="Save" size="30" onclick="submitImage()">
+</form>
   <input id="clearButton" type="button" value="Clear" size="23" onclick="erase()">
 
-  <h3 id="predictedNumber">Predicted number: </h3>                    
-  <h1 id="digit"></h1>
+  <h3 id="predictionHeader">Predicted number: </h3>
+  <p id="predictedNumber"></p>
 </body>
 
-<script src="{{ url_for('static', filename='javascript/canvas.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='javascript/canvas.js') }}"></script> -->
+<script src="../../../static/javascript/canvas.js"></script>
 
 </html>

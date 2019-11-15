@@ -1,6 +1,5 @@
 // Adapted from https://stackoverflow.com/a/8398189/8721358
 
-//
 var canvas, ctx, flag = false,
   prevX = 0,
   currX = 0,
@@ -8,8 +7,12 @@ var canvas, ctx, flag = false,
   currY = 0,
   dot_flag = false;
 
-var x = "black",
-  y = 2;
+// Sets the color and size of the brush
+var x = "red",
+  y = 5;
+
+// Sets the url that the user drawn image will be posted to 
+var url = "http://127.0.0.1:5000/digit";
 
 // Initialise the canvas and set it up
 function init() {
@@ -18,30 +21,18 @@ function init() {
   w = canvas.width;
   h = canvas.height;
 
-  canvas.addEventListener("mousemove", function(e) {
+  canvas.addEventListener("mousemove", function (e) {
     findxy('move', e)
   }, false);
-  canvas.addEventListener("mousedown", function(e) {
+  canvas.addEventListener("mousedown", function (e) {
     findxy('down', e)
   }, false);
-  canvas.addEventListener("mouseup", function(e) {
+  canvas.addEventListener("mouseup", function (e) {
     findxy('up', e)
   }, false);
-  canvas.addEventListener("mouseout", function(e) {
+  canvas.addEventListener("mouseout", function (e) {
     findxy('out', e)
   }, false);
-}
-
-function color(obj) {
-  switch (obj.id) {
-    case "black":
-      x = "black";
-      break;
-  }
-
-  if (x == "white") y = 14;
-  else y = 2;
-
 }
 
 // Allows the user to draw with their mouse
@@ -58,15 +49,55 @@ function draw() {
   ctx.closePath();
 }
 
-// Clears the canvas. Removes the saved image from view as well if there is one
+// Clears the canvas 
 function erase() {
   ctx.clearRect(0, 0, w, h);
 }
 
 // Submits the image to the model
 function submitImage() {
-  var imageURL = canvas.toDataURL();
+  // var imageData = canvas.toDataURL("image/png");
+
+  // METHOD 1 - base64
+  // Uses ajax to post the canavs data to an url, and specifies the data type
+  //    $.ajax ({
+  //     type: "POST",
+  //     url: url,
+  //     data: {
+  //       imageBase64: imageData
+  //     }
+  //   }, success: function(predictedDigit) {
+  //     document.getElementById("predictedNumber").innerHTML = predictedDigit;
+  //   }, error: function(error) {
+  //     document.getElementById("predictedNumber").innerHTML = "ERROR: Unable to retrieve prediction";
+  //   }
+  // });
+
+  // $.ajax ({ 
+  //   type: "POST",
+  //   url: url, 
+  //   data: {
+  //     imageBase64: imageData
+  //   }, 
+  //   success: function (predictedDigit) {              
+  //     document.getElementById("predictedNumber").innerHTML = predictedDigit;
+  //   },
+  //   error: function (error) {    
+  //     document.getElementById("predictedNumber").innerHTML = "ERROR: Unable to retrieve predicted number";
+  //   }
+  // });
+
+  canvas = document.getElementById('canvas');
+
+  console.log(canvas.toDataURL())
+  
+  $.post(url, {
+    "imageBase64": canvas.toDataURL()
+  }, function(data) {
+    $("#number").text(data.message);
+  });
 }
+
 
 function findxy(res, e) {
   if (res == 'down') {

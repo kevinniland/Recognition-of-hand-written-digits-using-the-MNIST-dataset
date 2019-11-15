@@ -1,6 +1,6 @@
 # Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of 
 # hardcopy formats and interactive environments across platforms
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
 # NumPy is the fundamental package for scientific computing with Python
 import numpy as np
@@ -33,6 +33,8 @@ from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 # Allows for the saving and loading of the model
 from keras.models import load_model
 
+from keras import backend as kBackend
+
 # Downloads the MNIST data set directly from the TensorFlow and Keras API. The MNIST dataset contains 60,000 training images
 # and 10,000 testing images (with accompanying labels). We separate these two groups into train_imgs and train_labels for the training
 # images and training labels, respectively, and test_imgs and test_labels for the test images and test labels respectively
@@ -44,10 +46,17 @@ img_rows, img_cols = 28, 28
 # Reshaping
 #
 # To be able to use the MNIST dataset with the Keras API, we need to change our array (which is 3-dimensional)
-# to 4-dimensional numpy arrays 
-train_imgs = train_imgs.reshape(train_imgs.shape[0], img_rows, img_cols, 1)
-test_imgs = test_imgs.reshape(test_imgs.shape[0], img_rows, img_cols, 1)
-input_shape = (img_rows, img_cols, 1)
+# to 4-dimensional numpy arrays
+
+# https://stackoverflow.com/questions/49057149/expected-conv2d-1-input-to-have-shape-28-28-1-but-got-array-with-shape-1-2
+if kBackend.image_data_format() == 'channels_first':
+    train_imgs = train_imgs.reshape(train_imgs.shape[0], 1, img_rows, img_cols)
+    test_imgs = test_imgs.reshape(test_imgs.shape[0], 1, img_rows, img_cols)
+    input_shape = (1, img_rows, img_cols)
+else:
+    train_imgs = train_imgs.reshape(train_imgs.shape[0], img_rows, img_cols, 1)
+    test_imgs = test_imgs.reshape(test_imgs.shape[0], img_rows, img_cols, 1)
+    input_shape = (img_rows, img_cols, 1)
 
 # Ensure the values of train_imgs and test_imgs are float. This is done so as we can get decimal points after division
 train_imgs = train_imgs.astype('float32')
@@ -113,7 +122,7 @@ except:
     print("Saved model. Model will now be loaded on next run through")
 
 plt.imshow(test_imgs[3333].reshape(28, 28), cmap="gray")
-plt.show()
+# plt.show()
 
 # print(model.predict(test_imgs[9999:10000]), "\nPredicted number: ", np.argmax(model.predict(test_imgs[9999:10000])))
 
@@ -126,3 +135,4 @@ def prediction(digit, model):
     getPrediction = np.array(setPrediction[0])
 
     return np.argmax(getPrediction)
+
