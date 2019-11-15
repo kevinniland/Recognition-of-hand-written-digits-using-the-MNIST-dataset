@@ -17,6 +17,8 @@ model = load_model('model.h5')
 imageHeight = 28
 imageWidth = 28
 
+size = imageHeight, imageWidth
+
 @app.route('/')
 def homePage():
     return render_template('application/html/frontend.html')
@@ -62,14 +64,11 @@ def recogniseImage():
     imageB64 = request.values.get("imageBase64", "")
 
     decodeImage = base64.b64decode(imageB64[22:])
-
-    print(decodeImage)
     
     with open("userDigit.png", "wb") as f:
         f.write(decodeImage)
 
-    originalImage = Image.open("uD.png")
-    size = 28, 28
+    originalImage = Image.open("userDigit.png")
     newImage = ImageOps.fit(originalImage, size, Image.ANTIALIAS)
 
     newImage.save("resizedUserDigit.png")
@@ -82,7 +81,9 @@ def recogniseImage():
     setPrediction = model.predict(grayArray)
     getPrediction = np.array(setPrediction[0])
 
-    print(getPrediction)
+    # print(getPrediction)
+    predictedNumber = np.argmax(getPrediction)
+    print(predictedNumber)
 
     return {"serverMessage": imageB64}
 
