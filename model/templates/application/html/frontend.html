@@ -7,31 +7,28 @@
   <meta name="description" content="">
   <meta name="keywords" content="HTML, CSS, JavaScript">
   <meta name="author" content="Kevin Niland">
-  <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styling.css') }}"> -->
-  <link rel="stylesheet" type="text/css" href="../../../static/css/styling.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styling.css') }}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body onload="init()">
-  <canvas id="canvas" width="392" height="392"></canvas>
-
-  <div id="brush">Brush</div>
-  <div id="brushColor" onclick="color(this)"></div>
-  <div id="eraser">Eraser</div>
-  <div id="eraserBrush" onclick="color(this)"></div>
+  <canvas id="canvas" width="500" height="500"></canvas>
 
   <img id="canvasimg">
 
   <form method="POST">
-  <input id="saveButton" type="button" value="Save" size="30" onclick="submitImage()">
-</form>
+    <input id="saveButton" type="button" value="Save" size="30" onclick="submitImage()">
+  </form>
   <input id="clearButton" type="button" value="Clear" size="23" onclick="erase()">
 
-  <h3 id="predictionHeader">Predicted number: </h3>
-  <p id="predictedNumber"></p>
+  <h1 id="predictedNumberHeader">Predicted number: </h1>
+  <h1 id="predictedNumber"></h1>
+
+  <hr id="verticalLine">
+
+  <h2 id="predictionHistory"><u>History</u></h2>
 </body>
 
-<!-- <script src="{{ url_for('static', filename='javascript/canvas.js') }}"></script> -->
-<script src="../../../static/javascript/canvas.js"></script>
+<script src="{{ url_for('static', filename='javascript/canvas.js') }}"></script>
 
 </html>

@@ -5,37 +5,6 @@
   border: 2px solid black;
 }
 
-#brush {
-  position: absolute;
-  top: 12%;
-  left: 50%;
-}
-
-#brushColor {
-  position: absolute;
-  top: 15%;
-  left: 50.8%;
-  width: 1.3%;
-  height: 2.5%;
-  background: black;
-}
-
-#eraser {
-  position: absolute;
-  top: 12%;
-  left: 53%;
-}
-
-#eraserBrush {
-  position: absolute;
-  top: 15%;
-  left: 53.8%;
-  width: 1%;
-  height: 2%;
-  background: white;
-  border: 2px solid;
-}
-
 #canvasimg {
   position: absolute;
   top: 10%;
@@ -45,26 +14,37 @@
 
 #saveButton {
   position: absolute;
-  top: 90%;
-  left: 25%;
+  top: 82%;
+  left: 22.5%;
 }
 
 #clearButton {
   position: absolute;
-  top: 90%;
-  left: 30%;
+  top: 82%;
+  left: 27%;
+}
+
+#predictedNumberHeader {
+  position: absolute;
+  top: 35%;
+  left: 45%;
 }
 
 #predictedNumber {
   position: absolute;
-  top: 30%;
-  right: 30%;
-  font-size: 200%;
+  top: 35%;
+  left: 62.5%;
 }
 
-#digit {
+#predictionHistory {
   position: absolute;
-  top: 30%;
-  right: 20%;
-  font-size: 200%;
+  top: .1%;
+  left: 85%;
+}
+
+#verticalLine {
+  position: absolute;
+  width: .2%;
+  height: 100%;
+  left: 75%;
 }

@@ -7,7 +7,11 @@ var canvas, ctx, flag = false,
   currY = 0,
   dot_flag = false;
 
-// Sets the color and size of the brush
+/*
+ * Sets the color and size of the brush
+ * From testing, setting the color of the brush to black appears to cause inaccuracies in the prediction of
+ * the digit. This is due to the use of cv2
+ */
 var x = "red",
   y = 5;
 
@@ -56,45 +60,14 @@ function erase() {
 
 // Submits the image to the model
 function submitImage() {
-  // var imageData = canvas.toDataURL("image/png");
-
-  // METHOD 1 - base64
-  // Uses ajax to post the canavs data to an url, and specifies the data type
-  //    $.ajax ({
-  //     type: "POST",
-  //     url: url,
-  //     data: {
-  //       imageBase64: imageData
-  //     }
-  //   }, success: function(predictedDigit) {
-  //     document.getElementById("predictedNumber").innerHTML = predictedDigit;
-  //   }, error: function(error) {
-  //     document.getElementById("predictedNumber").innerHTML = "ERROR: Unable to retrieve prediction";
-  //   }
-  // });
-
-  // $.ajax ({ 
-  //   type: "POST",
-  //   url: url, 
-  //   data: {
-  //     imageBase64: imageData
-  //   }, 
-  //   success: function (predictedDigit) {              
-  //     document.getElementById("predictedNumber").innerHTML = predictedDigit;
-  //   },
-  //   error: function (error) {    
-  //     document.getElementById("predictedNumber").innerHTML = "ERROR: Unable to retrieve predicted number";
-  //   }
-  // });
-
-  canvas = document.getElementById('canvas');
-
-  console.log(canvas.toDataURL())
+  var imageData = canvas.toDataURL();
   
   $.post(url, {
-    "imageBase64": canvas.toDataURL()
+    "imageBase64": imageData
   }, function(data) {
-    $("#number").text(data.message);
+    // document.getElementById("predictedNumber").innerHTML = data;
+    // $("#predictedNumberHeader").append(data);
+    $("#predictedNumber").empty().append(data);
   });
 }
 
