@@ -3,7 +3,7 @@
 
 # flask is the framework while Flask is a Python class datatype
 
-# render_template allows the views i.e the webpages to be rendered and viewable once the server is up and running
+# render_template allows the views i.e the webpages, to be rendered and viewable once the server is up and running
 
 # request contains the data that the client has sent to your appplication, such as the URL parameters, POST data etc.
 from flask import Flask, render_template, request
@@ -17,7 +17,7 @@ from keras.models import load_model
 # NumPy is the fundamental package for scientific computing with Python
 import numpy as np
 
-# 
+# PIL (Python Image Library)
 from PIL import Image, ImageOps
 
 # OpenCV-Python is a library of Python bindings designed to solve computer vision problems. OpenCV-Python 
@@ -36,7 +36,6 @@ model = load_model('model.h5')
 # user-drawn image to be predicted correctly, we resize the image retrieved from the canvas to the same size
 imageHeight = 28
 imageWidth = 28
-
 size = imageHeight, imageWidth
 
 # Specify the route for the HTML page that conatins the canvas and return the page
@@ -54,15 +53,28 @@ def recogniseImage():
     with open("userDigit.png", "wb") as f:
         f.write(decodeImage)
 
+    # https://dev.to/preslavrachev/python-resizing-and-fitting-an-image-to-an-exact-size-13ic
+    #
+    # Open the canvas image sent to the server then, using ImageOps, take it, resize it, and apply a high-quality 
+    # downsampling filter (ANTIALIAS). Aliasing in images is described as jagged lines/edges (think of a staircase).
+    # Applying anti-aliasing to an image diminshes/resolves this. It applies a particular technique to smooth out the
+    # edges for a better overall picture
     originalImage = Image.open("userDigit.png")
     newImage = ImageOps.fit(originalImage, size, Image.ANTIALIAS)
 
+    # Save the resized image, allowing it to be further modified
     newImage.save("resizedUserDigit.png")
 
+    # cv2.imread() loads image from the specified file
     cv2Image = cv2.imread("resizedUserDigit.png")
+
+    # cv2.cvtColor() converts an image from one color space to another. The original black and white (bilevel) 
+    # images from NIST were size normalized to fit in a 20x20 pixel box while preserving their aspect ratio. The 
+    # resulting images contain grey levels as a result of the anti-aliasing technique used by the normalization 
+    # algorithm. As a result, we convert the user-drawn digit to a grey image as well
     grayImage = cv2.cvtColor(cv2Image, cv2.COLOR_BGR2GRAY)
 
-    grayArray = (np.array(grayImage).reshape(1, 28, 28, 1))
+    grayArray = np.array(grayImage).reshape(1, 28, 28, 1)
 
     setPrediction = model.predict(grayArray)
     getPrediction = np.array(setPrediction[0])
@@ -71,6 +83,8 @@ def recogniseImage():
     predictedNumber = str(np.argmax(getPrediction))
     print(predictedNumber)
 
+    # Return the predicted number. The predicted number will then be sent back to the javascript file, where it is
+    # then displayed on webpage itself
     return predictedNumber
 
 if __name__ == '__main__':

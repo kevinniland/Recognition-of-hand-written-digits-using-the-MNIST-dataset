@@ -100,12 +100,11 @@ batch_size = 128
 # all the training examples
 
 # With this model, the model seems to peak (in terms of accuracy) at 20 epochs. Any more epochs after this is more or less overkill
-num_epoch = 20
+num_epoch = 30
 
 # To avoid having to train the model each time the program is ran, the trained model can be loaded from a file
-# If no file is created, then the model is trained and then saved to a file
+# If no file has been created, then the model is trained and then saved to a file
 try:
-    print("Attempting to load model....")
     print("Model loaded successfully")
     model = load_model("model.h5")
 except:
@@ -121,7 +120,7 @@ except:
     model.save("model.h5")
     print("Saved model. Model will now be loaded on next run through")
 
-plt.imshow(test_imgs[3333].reshape(28, 28), cmap="gray")
+# plt.imshow(test_imgs[3333].reshape(28, 28), cmap="gray")
 # plt.show()
 
 # print(model.predict(test_imgs[9999:10000]), "\nPredicted number: ", np.argmax(model.predict(test_imgs[9999:10000])))
@@ -129,10 +128,4 @@ plt.imshow(test_imgs[3333].reshape(28, 28), cmap="gray")
 # Prints the predicted number. The predicted number is based on a score. Each number (0 - 9) in the array is given a score.
 # The number with the highest score is presumed by the model to be number in the image that has been graphed
 # print("\nPredicted number: ", np.argmax(model.predict(test_imgs[3333:3334])))
-
-def prediction(digit, model):
-    setPrediction = model.predict(digit)
-    getPrediction = np.array(setPrediction[0])
-
-    return np.argmax(getPrediction)
 
