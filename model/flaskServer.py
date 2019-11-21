@@ -8,6 +8,9 @@
 # request contains the data that the client has sent to your appplication, such as the URL parameters, POST data etc.
 from flask import Flask, render_template, request
 
+import re
+from io import BytesIO
+
 # 
 import base64
 

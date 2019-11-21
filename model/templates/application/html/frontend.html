@@ -1,3 +1,6 @@
+<!-- Web application that display a canvas which allows a user to draw an image. After clicking 'Submit',
+     the digit will be saved and, after some conversion, the digit will be put through the model and model
+     will then attempt to identify the digit. The result will then be sent back and displayed on this webpage as well -->
 <!DOCTYPE>
 <html>
 
@@ -11,13 +14,22 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
+<!-- Initialise the canvas once the body of the page has loaded -->
 <body onload="init()">
+  <h2 id="canvasHeader">Canvas</h2>
+  <p id="canvasInfo">
+    Draw a digit (0 - 9) and then click 'Submit'. The digit will then be saved and sent to a model
+    that will attempt to recognise and identify the digit drawn.<br /> The result will be returned and displayed on the
+    left of the
+    canvas.
+  </p>
+
   <canvas id="canvas" width="500" height="500"></canvas>
 
   <img id="canvasimg">
 
   <form method="POST">
-    <input id="saveButton" type="button" value="Save" size="30" onclick="submitImage()">
+    <input id="saveButton" type="button" value="Submit" size="30" onclick="submitImage()">
   </form>
   <input id="clearButton" type="button" value="Clear" size="23" onclick="erase()">
 

@@ -125,7 +125,3 @@ except:
 
 # print(model.predict(test_imgs[9999:10000]), "\nPredicted number: ", np.argmax(model.predict(test_imgs[9999:10000])))
 
-# Prints the predicted number. The predicted number is based on a score. Each number (0 - 9) in the array is given a score.
-# The number with the highest score is presumed by the model to be number in the image that has been graphed
-# print("\nPredicted number: ", np.argmax(model.predict(test_imgs[3333:3334])))
-

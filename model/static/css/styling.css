@@ -1,3 +1,16 @@
+/* Styling sheet for various elements on the HTML page */
+#canvasHeader {
+  position: absolute;
+  top: 1%;
+  left: 10%;
+}
+
+#canvasInfo {
+  position: absolute;
+  top: 2%;
+  left: 10%;
+}
+
 #canvas {
   position: absolute;
   top: 10%;
