@@ -16,5 +16,14 @@
  ## Project Layout
  This project contains three distinct "parts" that all work together:
  * **Model**: The model has been trained using the MNIST dataset. The dataset contains 70,000 handwritten digits, split into two sets - a training set (60,000) and a testing set (10,000). It is a subset of the larger NIST set.
- * **Flask server**:
- * **Canvas**: 
+ * **Flask server**: The flask server runs the entire application. When run, the application will be hosted on `http://127.0.0.1:5000/`. The flask server displays the canvas and processess the canvas image that is sent from the canvas using AJAX and puts it through the model.
+ * **Canvas**: The canvas is made up of three parts - the HTML file that renders the actual canvas, the JavaScript file that contains functions that allows the user to use their mouse on the canvas and send the canvas image to the flask server to processed and put through the model, and the CSS file that includes some styling.
+
+## Project flow
+The general flow of the project is as follows:
+* Run the flask server.
+* Open the webpage.
+* Use your mouse to draw a digit (0 - 9) on the canvas and click `Submit`.
+* The canvas image is submitted to the flask server via a POST request using AJAX.
+* The image is received on the flask server and processed - decode the image (remove unnecessary information from the image), convert the image to black and white and resize it, put the image through the model for prediction.
+* Send the result of the prediction back and display it on the webpage.
