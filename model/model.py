@@ -14,8 +14,8 @@ from keras.datasets import mnist
 # The Sequential model is a linear stack of layers
 from keras.models import Sequential 
 
-#''' Please refer to the wiki of the repository from which this project is located for a more in-depth analysis and explanation
-   # of various imports, packages, the model, how it is trained, etc. '''
+''' Please refer to the wiki of the repository from which this project is located for a more in-depth analysis and explanation
+    of various imports, packages, the model, how it is trained, etc. '''
 # Dense - implements the operation: output = activation(dot(input, kernel) + bias) where activation is the element-wise 
 # activation function passed as the activation argument, kernel is a weights matrix created by the layer, and bias is a bias 
 # vector created by the layer (only applicable if use_bias is True)
@@ -24,8 +24,9 @@ from keras.models import Sequential
 # at each update during training time, which helps prevent overfitting
 
 # Flatten - 'flattens' the input. Does not affect the batch size. Flattening a tensor means to remove all of the dimensions except for one
-# Conv2D - 2D convolution layer (e.g. spatial convolution over images). Creates a convolution kernel that is convolved with the layer input 
-# to produce a tensor of outputs
+
+# Conv2D - 2D convolution layer (e.g. spatial convolution over images). Creates a convolution kernel that is convolved 
+# with the layer input to produce a tensor of outputs
 
 # MaxPooling2D - Max pooling operation for spatial data
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
@@ -74,6 +75,9 @@ num_classes = 10
 # 
 rate = 0.5
 
+# 
+dropout = 0.25
+
 train_labels = keras.utils.to_categorical(train_labels, num_classes)
 test_labels = keras.utils.to_categorical(test_labels, num_classes)
 train_labels[0]
@@ -81,15 +85,43 @@ train_labels[0]
 # Create a Sequential model and add the layers
 model = Sequential()
 
-model.add(Conv2D(32, kernel_size=(3, 3),
-                 activation='relu', input_shape=input_shape))
+# This particular model has 8 layers
+
+# This layer, and the layer below, creates a convolution kernel that is convolved with the layer input to produce a tensor of 
+# outputs
+
+# Activation - In the first, second, sixth, and eighth, we use a parameter called 'activation'. This computation decides
+# whether a neuron should be activated or not by calculating weighted sum and further adding bias with it. The purpose 
+# of the activation function is to introduce non-linearity into the output of a neuron. Sigmoid, Tanh/Hyperbolic, and 
+# ReLu (Rectified Linear Unit) are types of activation. Please refer to the wiki on why I decided to use ReLu instead of
+# Sigmoid or Tanh/Hyperbolic
+model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape))
+
+
 model.add(Conv2D(64, (3, 3), activation='relu'))
+
+# Max pooling operation for spatial data
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-model.add(Flatten())  # Flattens the 2D arrays for fully connected layers
+
+# A simple and powerful regularization technique for neural networks and deep learning models is dropout. Dropout 
+# is a technique where randomly selected neurons are ignored during training. This means that their contribution
+# to the activation of downstream neurons is temporally removed on the forward pass and any weight updates are not applied 
+# to the neuron on the backward pass.
+model.add(Dropout(dropout))
+
+# Flattens the 2D arrays for fully connected layers
+model.add(Flatten()) 
+
+
 model.add(Dense(128, activation='relu'))
+
+
 model.add(Dropout(rate))
+
+
 model.add(Dense(num_classes, activation='softmax'))
+
+
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
 

@@ -13,7 +13,7 @@ var canvas, ctx, flag = false,
  * the digit. This is due to the use of cv2
  */
 var x = "red",
-  y = 5;
+  y = 3;
 
 // Sets the url that the user drawn image will be posted to 
 var url = "http://127.0.0.1:5000/digit";
