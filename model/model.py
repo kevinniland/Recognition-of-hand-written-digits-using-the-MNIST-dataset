@@ -82,7 +82,7 @@ train_labels = keras.utils.to_categorical(train_labels, num_classes)
 test_labels = keras.utils.to_categorical(test_labels, num_classes)
 train_labels[0]
 
-# Create a Sequential model and add the layers
+# Create a Sequential model and add the layers. The Sequential model is a linear stack of layers.
 model = Sequential()
 
 # This particular model has 8 layers
