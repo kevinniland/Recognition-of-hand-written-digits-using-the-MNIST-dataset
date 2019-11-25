@@ -125,5 +125,6 @@ def recogniseImage():
     # then displayed on webpage itself
     return predictedNumber
 
+# For some reason, I kept getting an error when attempting to run the server if debug was set to True
 if __name__ == '__main__':
     app.run(debug=False, threaded=False)
