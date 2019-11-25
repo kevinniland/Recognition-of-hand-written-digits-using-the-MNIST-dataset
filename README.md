@@ -27,3 +27,5 @@ The general flow of the project is as follows:
 * The canvas image is submitted to the flask server via a POST request using AJAX.
 * The image is received on the flask server and processed - decode the image (remove unnecessary information from the image), convert the image to black and white and resize it, put the image through the model for prediction.
 * Send the result of the prediction back and display it on the webpage.
+
+![Project Flow diagram](https://github.com/kevinniland97/Recognition-of-hand-written-digits-using-the-MNIST-dataset/blob/master/project_flow.PNG)
