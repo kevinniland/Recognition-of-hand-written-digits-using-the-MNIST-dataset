@@ -65,8 +65,6 @@ function submitImage() {
   $.post(url, {
     "imageBase64": imageData
   }, function(data) {
-    // document.getElementById("predictedNumber").innerHTML = data;
-    // $("#predictedNumberHeader").append(data);
     $("#predictedNumber").empty().append(data);
   });
 }

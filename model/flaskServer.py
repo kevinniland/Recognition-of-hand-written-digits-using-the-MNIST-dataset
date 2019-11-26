@@ -8,10 +8,14 @@
 # request contains the data that the client has sent to your appplication, such as the URL parameters, POST data etc.
 from flask import Flask, render_template, request
 
-# 
+# io provides Python’s main facilities for dealing with various types of I/O. From this module, we are importing BytesIO
+
+# BytesIO is a stream implementation using an in-memory bytes buffer. BytesIO provides or overrides these methods in 
+# addition to those from BufferedIOBase and IOBase
 from io import BytesIO
 
-# 
+# base64 provides functions for encoding binary data to printable ASCII characters and decoding such encodings 
+# back to binary data
 import base64
 
 # Allows for the saving and loading of the model
@@ -63,8 +67,8 @@ def recogniseImage():
     # edges for a better overall picture
     userImage = userImage.resize(size, Image.ANTIALIAS)
 
-    # Previous method I used. While this way worked pretty well (using ImageOps), 1's, 6's, and 9's were rarely getting detected.
-    # As a result, I have implemented a different method using the Python Imaging Library (PIL)   
+    ''' Previous method I used. While this way worked pretty well (using ImageOps), 1's, 6's, and 9's were rarely getting 
+    detected. As a result, I have implemented a different method using the Python Imaging Library (PIL) '''   
 
     #   Save the canvas image as a .png file
     #   with open("userDigit.png", "wb") as f:
@@ -89,6 +93,7 @@ def recogniseImage():
     # images from NIST were size normalized to fit in a 20x20 pixel box while preserving their aspect ratio. The 
     # resulting images contain grey levels as a result of the anti-aliasing technique used by the normalization 
     # algorithm. As a result, we convert the user-drawn digit to a grey image as well
+
     # grayImage = cv2.cvtColor(cv2Image, cv2.COLOR_BGR2GRAY)
 
     # Reshape the gray image using a numpy array
@@ -119,12 +124,16 @@ def recogniseImage():
     # To return this as a response, it must be cast as a string (unable to return an int64 in this type of function)
     predictedNumber = str(np.argmax(getPrediction))
     print(predictedNumber)
-
-
+    
     # Return the predicted number. The predicted number will then be sent back to the javascript file, where it is
     # then displayed on webpage itself
     return predictedNumber
-
-# For some reason, I kept getting an error when attempting to run the server if debug was set to True
+      
+# For some reason, I kept getting an error when attempting to run the server if debug and threaded was set to True. I kept 
+# getting the following error: 
+# 
+# AttributeError: '_thread._local' object has no attribute 'value'. 
+# 
+# From looking around online, it was recommended that I set to debug and threaded to false, which did fix the issue
 if __name__ == '__main__':
     app.run(debug=False, threaded=False)

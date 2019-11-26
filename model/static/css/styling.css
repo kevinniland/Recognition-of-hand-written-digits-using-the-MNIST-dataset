@@ -49,12 +49,6 @@
   left: 62.5%;
 }
 
-#predictionHistory {
-  position: absolute;
-  top: .1%;
-  left: 85%;
-}
-
 #verticalLine {
   position: absolute;
   width: .2%;
