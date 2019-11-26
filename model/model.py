@@ -1,10 +1,3 @@
-# Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of 
-# hardcopy formats and interactive environments across platforms
-import matplotlib.pyplot as plt
-
-# NumPy is the fundamental package for scientific computing with Python
-import numpy as np
-
 # Keras is a high-level neural networks API, written in Python and capable of running on top of TensorFlow, CNTK, or Theano
 import keras
 
@@ -72,11 +65,9 @@ test_imgs /= 255
 # 10 neurons since there are 10 number classes (0, 1, 2, 3, ..., 9)
 num_classes = 10
 
-# 
-rate = 0.5
-
-# 
-dropout = 0.25
+# Used to determine the rate of dropout in the below Dropout layers
+firstDropout = 0.25
+secondDropout = 0.5
 
 train_labels = keras.utils.to_categorical(train_labels, num_classes)
 test_labels = keras.utils.to_categorical(test_labels, num_classes)
@@ -87,41 +78,50 @@ model = Sequential()
 
 # This particular model has 8 layers
 
-# This layer, and the layer below, creates a convolution kernel that is convolved with the layer input to produce a tensor of 
-# outputs
-
 # Activation - In the first, second, sixth, and eighth, we use a parameter called 'activation'. This computation decides
 # whether a neuron should be activated or not by calculating weighted sum and further adding bias with it. The purpose 
 # of the activation function is to introduce non-linearity into the output of a neuron. Sigmoid, Tanh/Hyperbolic, and 
-# ReLu (Rectified Linear Unit) are types of activation. Please refer to the wiki on why I decided to use ReLu instead of
-# Sigmoid or Tanh/Hyperbolic
+# ReLu (Rectified Linear Unit), and Softmax are types of activation
+
+# This layer, and the layer below, creates a convolution kernel that is convolved with the layer input to produce a tensor of 
+# outputs. This first convolutional layer adds 32 convolution filters and a kernel size of 3 x 3
 model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape))
 
-
+# This first convolutional layer adds 64 convolution filters and a kernel size of 3 x 3
 model.add(Conv2D(64, (3, 3), activation='relu'))
 
-# Max pooling operation for spatial data
+# Max pooling operation for spatial data. When constructing CNNs, it is common to insert pooling layers after each convolution 
+# layer (above) to reduce the spatial size of the representation to reduce the parameter counts which reduces the computational 
+# complexity. Basically, we do this to choose the best features via pooling
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
 # A simple and powerful regularization technique for neural networks and deep learning models is dropout. Dropout 
 # is a technique where randomly selected neurons are ignored during training. This means that their contribution
 # to the activation of downstream neurons is temporally removed on the forward pass and any weight updates are not applied 
-# to the neuron on the backward pass.
-model.add(Dropout(dropout))
+# to the neuron on the backward pass.The randomly selected number of neurons that are ignored during training are based 
+# on the dropout rate we apply
+model.add(Dropout(firstDropout))
 
-# Flattens the 2D arrays for fully connected layers
+# Flattens the 2D arrays for fully connected layers. Since there are too many dimensions, we use Flatten as we only want a 
+# classification output
 model.add(Flatten()) 
 
-
+# https://www.tensorflow.org/api_docs/python/tf/keras/layers/Dense
+# Ususally, when using the Dense layer, you would specify the input shape. However, as we have already done this in the first
+# layer, there is no need to do this 
+# Outputs an array of shape (*, 128)
 model.add(Dense(128, activation='relu'))
 
+#  We perform one more droput for the sake of convergence
+model.add(Dropout(secondDropout))
 
-model.add(Dropout(rate))
-
-
+# Softmax turns numbers aka logits into probabilities that sum to one. Output a softmax to squash the matrix into output 
+# probabilities
+# Outputs an array of shape (*, num_classes)
 model.add(Dense(num_classes, activation='softmax'))
 
-
+# Adaptive learning rate (Adadelta) is a popular form of gradient descent rivaled only by adam and adagrad
+# We specify the loss as catergorical_crossentropy as we have multiple classes (10)
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
 
@@ -131,14 +131,15 @@ batch_size = 128
 # In the context of a neural network, one epoch is the equivalent of one forward pass and one backward pass of
 # all the training examples
 
-# With this model, the model seems to peak (in terms of accuracy) at 20 epochs. Any more epochs after this is more or less overkill
-num_epoch = 30
+# With this model, the model seems to peak (in terms of accuracy) at 20 epochs. Any more epochs after this is more or 
+# less overkill. I have specified 40 epcohs here - mainly just for myself to see how accurate I could get the model. 
+num_epoch = 40
 
 # To avoid having to train the model each time the program is ran, the trained model can be loaded from a file
-# If no file has been created, then the model is trained and then saved to a file
 try:
-    print("Model loaded successfully")
     model = load_model("model.h5")
+    print("Model loaded successfully")
+# If no file has been created, then the model is trained and then saved to a file
 except:
     print("Failed to load model. Creating new model...")
     model_log = model.fit(train_imgs, train_labels,
@@ -147,13 +148,8 @@ except:
                           verbose=1,
                           validation_data=(test_imgs, test_labels))
 
+    # Save the weights to a .h5 file. This .h5 file can be loaded in the flask server
     model.save_weights("model.h5")
 
     model.save("model.h5")
     print("Saved model. Model will now be loaded on next run through")
-
-# plt.imshow(test_imgs[3333].reshape(28, 28), cmap="gray")
-# plt.show()
-
-# print(model.predict(test_imgs[9999:10000]), "\nPredicted number: ", np.argmax(model.predict(test_imgs[9999:10000])))
-
