@@ -1,5 +1,4 @@
 // Adapted from https://stackoverflow.com/a/8398189/8721358
-
 var canvas, ctx, flag = false,
   prevX = 0,
   currX = 0,
@@ -68,7 +67,6 @@ function submitImage() {
     $("#predictedNumber").empty().append(data);
   });
 }
-
 
 function findxy(res, e) {
   if (res == 'down') {
